@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape Room</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    max-width:800px;
+    margin:auto;
+    padding:20px;
+    background:#f4f4f4;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:10px;
+    box-shadow:0 0 5px rgba(0,0,0,.15);
+}
+
+input{
+    padding:8px;
+    margin-top:5px;
+    width:250px;
+}
+
+.correct{
+    color:green;
+    font-weight:bold;
+}
+
+.incorrect{
+    color:red;
+    font-weight:bold;
+}
+
+#finalSection,
+#winSection{
+    display:none;
+}
+
+h1{
+    text-align:center;
+}
+
+#timer{
+    font-size:20px;
+    font-weight:bold;
+}
+
+#progress{
+    font-size:18px;
+    margin-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Escape Room: Titel X</h1>
+
+<div id="timer">Tijd: 00:00</div>
+<div id="progress">0/0 puzzels opgelost</div>
+
+<div id="puzzleContainer"></div>
+
+<div class="card" id="finalSection">
+    <h2>🎉 Alle puzzels opgelost!</h2>
+    <p>Voer de geheime code in om orde te herstellen:</p>
+
+    <input id="finalCodeInput">
+    <button onclick="checkFinalCode()">Verzenden</button>
+
+    <div id="finalResult"></div>
+</div>
+
+<div class="card" id="winSection">
+    <h2>🏆 Gefeliciteerd!</h2>
+    <p>De rust is teruggekeerd in de apotheek!</p>
+    <p id="finalTime"></p>
+</div>
+
+<script>
+
+const puzzles = [
+
+//template nieuwe vraag + hint copy pasta
+/**
+
+komma na de "}" zo -> "}," als er nog een vraag volgt
+
+{
+    question:"Vraag X",
+    answer:"APPEL",
+
+}
+
+**/
+
+{
+    question:"Vraag 1",
+    answer:"APPEL",
+
+},
+
+{
+    question:"Vraag 2",
+    answer:"BANAAN",
+
+},
+
+{
+    question:"Vraag 3",
+    answer:"BALIE",
+
+},
+{
+    question:"Vraag 4",
+    answer:"APPEL",
+
+},
+
+{
+    question:"Vraag 5",
+    answer:"BANAAN",
+
+},
+{
+    question:"Vraag 6",
+    answer:"APPEL",
+
+}
+
+];
+
+// AANPASSEN WANNEER WE EEN CODE HEBBEN
+const FINAL_CODE = "UITEINDELIJK_GEHEIME_CODE";
+
+let solvedCount = 0;
+let startTime = Date.now();
+
+const container = document.getElementById("puzzleContainer");
+
+function buildPage(){
+
+    document.getElementById("progress").textContent =
+        `0/${puzzles.length} puzzels opgelost`;
+
+    puzzles.forEach((puzzle,index)=>{
+
+        const div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+            <h3>${puzzle.question}</h3>
+
+            <input id="answer${index}">
+            <button onclick="checkAnswer(${index})">Check</button>
+
+            <div id="result${index}"></div>
+
+        `;
+
+        container.appendChild(div);
+
+    });
+
+}
+
+const solved = new Array(puzzles.length).fill(false);
+
+function checkAnswer(index){
+
+    const input =
+        document.getElementById(`answer${index}`)
+        .value
+        .trim()
+        .toUpperCase();
+
+    const result =
+        document.getElementById(`result${index}`);
+
+    if(input === puzzles[index].answer.toUpperCase()){
+
+        result.innerHTML =
+            '<span class="correct">Dat klopt! ✓</span>';
+
+        if(!solved[index]){
+            solved[index] = true;
+            solvedCount++;
+        }
+
+    } else {
+
+        result.innerHTML =
+            '<span class="incorrect">Dat klopt.. niet. Probeer maar nog een keer! ✗</span>';
+
+    }
+
+    updateProgress();
+
+}
+// this is redundant after testing, woops
+/**
+function checkHint(index){
+
+    const input =
+        document.getElementById(`hint${index}`)
+        .value
+        .trim()
+        .toUpperCase();
+
+    const result =
+        document.getElementById(`hintResult${index}`);
+
+    if(input === puzzles[index].hintAnswer.toUpperCase()){
+
+        result.innerHTML =
+            '<span class="correct">Hint unlocked!</span>';
+
+    } else {
+
+        result.innerHTML =
+            '<span class="incorrect">Fout! Misschien is er een QR code ergens in de kamer... </span>';
+
+    }
+
+}
+**/
+function updateProgress(){
+
+    document.getElementById("progress").textContent =
+        `${solvedCount}/${puzzles.length} puzzels opgelost`;
+
+    if(solvedCount === puzzles.length){
+
+        document.getElementById("finalSection")
+            .style.display = "block";
+    }
+
+}
+
+function checkFinalCode(){
+
+    const code =
+        document.getElementById("finalCodeInput")
+        .value
+        .trim()
+        .toUpperCase();
+
+    if(code === FINAL_CODE.toUpperCase()){
+
+        const elapsed =
+            Math.floor((Date.now() - startTime)/1000);
+
+        const minutes =
+            Math.floor(elapsed/60);
+
+        const seconds =
+            elapsed % 60;
+
+        document.getElementById("finalTime")
+            .textContent =
+            `Time to escape: ${minutes}m ${seconds}s`;
+
+        document.getElementById("winSection")
+            .style.display = "block";
+
+        document.getElementById("finalSection")
+            .style.display = "none";
+
+    } else {
+
+        document.getElementById("finalResult")
+            .innerHTML =
+            '<span class="incorrect">Onjuiste code!</span>';
+
+    }
+
+}
+
+setInterval(()=>{
+
+    const elapsed =
+        Math.floor((Date.now() - startTime)/1000);
+
+    const minutes =
+        String(Math.floor(elapsed/60))
+        .padStart(2,'0');
+
+    const seconds =
+        String(elapsed%60)
+        .padStart(2,'0');
+
+    document.getElementById("timer")
+        .textContent =
+        `Tijd: ${minutes}:${seconds}`;
+
+},1000);
+
+buildPage();
+
+</script>
+
+</body>
+</html>

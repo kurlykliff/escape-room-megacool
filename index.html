@@ -6,12 +6,6 @@
 <title>Escape Room</title>
 
 <style>
-
-input:disabled {
-    background: #e0ffe0;
-    border: 2px solid green;
-}
-
 body{
     font-family: Arial, sans-serif;
     max-width:800px;
@@ -109,7 +103,7 @@ komma na de "}" zo -> "}," als er nog een vraag volgt
 
 {
     question:"Vraag 1",
-    answer:"BALIE",
+    answer:"APPEL",
 
 }
 /**
@@ -122,7 +116,7 @@ komma na de "}" zo -> "}," als er nog een vraag volgt
 
 {
     question:"Vraag 3",
-    answer:"APPEL",
+    answer:"BALIE",
 
 },
 {
@@ -167,9 +161,9 @@ function buildPage(){
             <h3>${puzzle.question}</h3>
 
             <input id="answer${index}">
-			<button id="answerBtn${index}" onclick="checkAnswer(${index})">
-					Check
-			</button>
+            <button onclick="checkAnswer(${index})">Check</button>
+
+            <div id="result${index}"></div>
 
         `;
 
@@ -183,10 +177,6 @@ const solved = new Array(puzzles.length).fill(false);
 
 function checkAnswer(index){
 
-    if (solved[index]) {
-        return;
-    }
-
     const input =
         document.getElementById(`answer${index}`)
         .value
@@ -199,25 +189,23 @@ function checkAnswer(index){
     if(input === puzzles[index].answer.toUpperCase()){
 
         result.innerHTML =
-            '<span class="correct">✓ Correct</span>';
+            '<span class="correct">Dat klopt! ✓</span>';
 
-        solved[index] = true;
-        solvedCount++;
-
-        document.getElementById(`answer${index}`).disabled = true;
-        document.getElementById(`answerBtn${index}`).disabled = true;
+        if(!solved[index]){
+            solved[index] = true;
+            solvedCount++;
+        }
 
     } else {
 
         result.innerHTML =
-            '<span class="incorrect">✗ Incorrect</span>';
+            '<span class="incorrect">Dat klopt.. niet. Probeer maar nog een keer! ✗</span>';
 
     }
 
     updateProgress();
 
 }
-
 // this is redundant after testing, woops
 /**
 function checkHint(index){

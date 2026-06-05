@@ -178,9 +178,6 @@ const solved = new Array(puzzles.length).fill(false);
 
 function checkAnswer(index){
 
-if (solved[index]) {
-    return;
-}
 
     const input =
         document.getElementById(`answer${index}`)
@@ -201,11 +198,7 @@ if (solved[index]) {
             solvedCount++;
         }
 		
-		const inputEl = document.getElementById(`answer${index}`);
-		const buttonEl = document.getElementById(`answerBtn${index}`);
-
-		inputEl.disabled = true;
-		buttonEl.disabled = true;
+	
 
     } else {
 

@@ -103,7 +103,7 @@ komma na de "}" zo -> "}," als er nog een vraag volgt
 
 {
     question:"Vraag 1",
-    answer:"APPEL",
+    answer:"BALIE",
 
 }
 /**
@@ -116,7 +116,7 @@ komma na de "}" zo -> "}," als er nog een vraag volgt
 
 {
     question:"Vraag 3",
-    answer:"BALIE",
+    answer:"APPEL",
 
 },
 {
@@ -160,10 +160,11 @@ function buildPage(){
         div.innerHTML = `
             <h3>${puzzle.question}</h3>
 
-            <input id="answer${index}">
-            <button onclick="checkAnswer(${index})">Check</button>
-
-            <div id="result${index}"></div>
+            <input id="answer${index}>
+			<button id="answerBtn${index}"
+			onclick=""checkAnswer(${index})">
+				Check 
+			</button>
 
         `;
 
@@ -176,6 +177,10 @@ function buildPage(){
 const solved = new Array(puzzles.length).fill(false);
 
 function checkAnswer(index){
+
+if (solved[index]) {
+    return;
+}
 
     const input =
         document.getElementById(`answer${index}`)
@@ -195,6 +200,12 @@ function checkAnswer(index){
             solved[index] = true;
             solvedCount++;
         }
+		
+		const inputEl = document.getElementById(`answer${index}`);
+		const buttonEl = document.getElementById(`answerBtn${index}`);
+
+		inputEl.disabled = true;
+		buttonEl.disabled = true;
 
     } else {
 

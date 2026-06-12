@@ -184,8 +184,8 @@ const solved = new Array(puzzles.length).fill(false);
 
 function checkAnswer(index) {
 
-    const inputBox = document.getElementById(answer${index});
-    const resultBox = document.getElementById(result${index});
+    const inputBox = document.getElementById(`answer${index}`);
+    const resultBox = document.getElementById(`result${index}`);
 
     const answer = inputBox.value.trim().toUpperCase();
 

@@ -6,6 +6,13 @@
 <title>Escape Room</title>
 
 <style>
+
+input:disabled {
+	background-color: #d4ffd4;
+	color: black;
+	font-weight: bold;
+}
+
 body{
     font-family: Arial, sans-serif;
     max-width:800px;
@@ -175,33 +182,34 @@ function buildPage(){
 
 const solved = new Array(puzzles.length).fill(false);
 
-function checkAnswer(index){
+function checkAnswer(index) {
 
-    const input =
-        document.getElementById(`answer${index}`)
-        .value
-        .trim()
-        .toUpperCase();
+    const inputBox = document.getElementById(answer${index});
+    const resultBox = document.getElementById(result${index});
 
-    const result =
-        document.getElementById(`result${index}`);
+    const answer = inputBox.value.trim().toUpperCase();
 
-    if(input === puzzles[index].answer.toUpperCase()){
+    if (answer === puzzles[index].answer.toUpperCase()) {
 
-        result.innerHTML =
+        resultBox.innerHTML =
             '<span class="correct">Dat klopt! ✓</span>';
 
-        if(!solved[index]){
+        if (!solved[index]) {
             solved[index] = true;
             solvedCount++;
+            updateProgress();
         }
+
+        // LOCK THE BOX
+        inputBox.disabled = true;
 
     } else {
 
-        result.innerHTML =
-            '<span class="incorrect">Dat klopt.. niet. Probeer maar nog een keer! ✗</span>';
+        resultBox.innerHTML =
+            '<span class="incorrect">Dat klopt.. niet. Probeer maar nog een keer ✗</span>';
 
     }
+}
 
     updateProgress();
 

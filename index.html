@@ -200,7 +200,7 @@ function checkAnswer(index) {
             updateProgress();
         }
 
-        // LOCK THE BOX
+        // Lock the box permanently
         inputBox.disabled = true;
 
     } else {
@@ -209,10 +209,6 @@ function checkAnswer(index) {
             '<span class="incorrect">Dat klopt.. niet. Probeer maar nog een keer ✗</span>';
 
     }
-}
-
-    updateProgress();
-
 }
 // this is redundant after testing, woops
 /**
